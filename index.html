@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Temperature Converter</title>
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+<div class="container">
+    <h2>Temperature Converter</h2>
+    <input type="text" id="temperature" placeholder="Enter temperature">
+    <select id="fromUnit">
+        <option value="celsius">Celsius</option>
+        <option value="fahrenheit">Fahrenheit</option>
+        <option value="kelvin">Kelvin</option>
+    </select>
+    <select id="toUnit">
+        <option value="celsius">Celsius</option>
+        <option value="fahrenheit">Fahrenheit</option>
+        <option value="kelvin">Kelvin</option>
+    </select>
+    <button onclick="convertTemperature()">Convert</button>
+    <div id="result"></div>
+</div>
+
+<script>
+    const temperatureInput = document.getElementById('temperature');
+    const fromUnitSelect = document.getElementById('fromUnit');
+    const toUnitSelect = document.getElementById('toUnit');
+    const resultElement = document.getElementById('result');
+
+    function convertTemperature() {
+        const temperature = parseFloat(temperatureInput.value);
+        const fromUnit = fromUnitSelect.value;
+        const toUnit = toUnitSelect.value;
+
+        if (isNaN(temperature)) {
+            showError('Please enter a valid temperature.');
+            return;
+        }
+
+        let convertedTemperature;
+        switch (fromUnit) {
+            case 'celsius':
+                convertedTemperature = convertFromCelsius(temperature, toUnit);
+                break;
+            case 'fahrenheit':
+                convertedTemperature = convertFromFahrenheit(temperature, toUnit);
+                break;
+            case 'kelvin':
+                convertedTemperature = convertFromKelvin(temperature, toUnit);
+                break;
+            default:
+                break;
+        }
+
+        showResult(convertedTemperature, fromUnit, toUnit);
+    }
+
+    function convertFromCelsius(temperature, toUnit) {
+        switch (toUnit) {
+            case 'fahrenheit':
+                return (temperature * 9/5) + 32;
+            case 'kelvin':
+                return temperature + 273.15;
+            default:
+                return temperature;
+        }
+    }
+
+    function convertFromFahrenheit(temperature, toUnit) {
+        switch (toUnit) {
+            case 'celsius':
+                return (temperature - 32) * 5/9;
+            case 'kelvin':
+                return (temperature - 32) * 5/9 + 273.15;
+            default:
+                return temperature;
+        }
+    }
+
+    function convertFromKelvin(temperature, toUnit) {
+        switch (toUnit) {
+            case 'celsius':
+                return temperature - 273.15;
+            case 'fahrenheit':
+                return (temperature - 273.15) * 9/5 + 32;
+            default:
+                return temperature;
+        }
+    }
+
+    function showError(message) {
+        resultElement.style.color = 'red';
+        resultElement.innerText = message;
+    }
+
+    function showResult(convertedTemperature, fromUnit, toUnit) {
+        resultElement.style.color = 'black';
+        resultElement.innerText = `${temperatureInput.value} ${fromUnit.charAt(0).toUpperCase() + fromUnit.slice(1)} is equal to ${convertedTemperature.toFixed(2)} ${toUnit.charAt(0).toUpperCase() + toUnit.slice(1)}`;
+    }
+
+    // Real-time conversion as the user types
+    temperatureInput.addEventListener('input', convertTemperature);
+    fromUnitSelect.addEventListener('change', convertTemperature);
+    toUnitSelect.addEventListener('change', convertTemperature);
+</script>
+</body>
+</html>
